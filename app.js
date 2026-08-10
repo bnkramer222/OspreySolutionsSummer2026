@@ -11,6 +11,9 @@ app.use("/public", express.static(path.join(__dirname, "public")));
 app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "views", "login.html"));
 });
+app.get("/volunteers", (req, res) => {
+    res.sendFile(path.join(__dirname, "views", "volunteers.html"));
+});
 
 app.listen(3000, () => {
     console.log("Server running at http://localhost:3000");

@@ -18,6 +18,35 @@ const volunteers = [
         status: "Inactive"
     }
 ];
+const filter = document.getElementById("volunteer-filter");
+
+filter.addEventListener("change", () => {
+
+    const selectedFilter = filter.value;
+
+    if (selectedFilter === "All") {
+
+        listVolunteers(volunteers);
+
+    } else if (selectedFilter === "Approved/Pending") {
+
+        const filteredVolunteers = volunteers.filter(volunteer => {
+            return volunteer.status === "Approved"
+                || volunteer.status === "Pending Approval";
+        });
+
+        listVolunteers(filteredVolunteers);
+
+    } else {
+
+        const filteredVolunteers = volunteers.filter(
+            volunteer => volunteer.status === selectedFilter
+        );
+
+        listVolunteers(filteredVolunteers);
+    }
+
+});
 
 function getVolunteers() {
     return volunteers;
@@ -44,11 +73,12 @@ function deleteVolunteer(id) {
         volunteers.splice(index, 1);
     }
 }
-function listVolunteers() {
+
+function listVolunteers(volunteersToDisplay) {
     const volunteerList = document.getElementById("volunteerList");
     volunteerList.innerHTML = "";
 
-    volunteers.forEach(volunteer => {
+    volunteersToDisplay.forEach(volunteer => {
         const listItem = document.createElement("li");
         listItem.textContent = `${volunteer.firstName} ${volunteer.lastName} - ${volunteer.status}`;
         volunteerList.appendChild(listItem);
@@ -56,5 +86,6 @@ function listVolunteers() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    listVolunteers();
+    listVolunteers(volunteers);
 }); 
+
