@@ -1,12 +1,8 @@
+// definitely needed help with this one, too much to write
+
 const express = require("express");
 const router = express.Router();
 const db = require("../db/database");
-
-
-// ------------------------------------
-// SEARCH VOLUNTEERS
-// GET /api/volunteers/search?q=...
-// ------------------------------------
 
 router.get("/search", (req, res) => {
     const searchTerm = req.query.q || "";
@@ -43,12 +39,6 @@ router.get("/search", (req, res) => {
     );
 });
 
-
-// ------------------------------------
-// GET ONE VOLUNTEER
-// GET /api/volunteers/:id
-// ------------------------------------
-
 router.get("/:id", (req, res) => {
     const volunteerId = req.params.id;
 
@@ -74,12 +64,6 @@ router.get("/:id", (req, res) => {
         }
     );
 });
-
-
-// ------------------------------------
-// ADD NEW VOLUNTEER
-// POST /api/volunteers
-// ------------------------------------
 
 router.post("/", (req, res) => {
     const {
@@ -199,11 +183,6 @@ router.post("/", (req, res) => {
     );
 });
 
-
-// ------------------------------------
-// EDIT VOLUNTEER
-// PUT /api/volunteers/:id
-// ------------------------------------
 
 router.put("/:id", (req, res) => {
     const volunteerId = req.params.id;
@@ -330,15 +309,6 @@ router.put("/:id", (req, res) => {
     );
 });
 
-
-// ------------------------------------
-// VIEW OPPORTUNITY MATCHES
-// GET /api/volunteers/:id/matches
-// ------------------------------------
-
-// For now, this route returns sample matches.
-// We can connect it to the real opportunities
-// table once that part of the project exists.
 
 router.get("/:id/matches", (req, res) => {
     const volunteerId = req.params.id;
