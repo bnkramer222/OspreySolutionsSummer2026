@@ -6,7 +6,8 @@
 	<h1>Manage Volunteers</h1>
 
 	<label for="volunteer-filter">Filter volunteers:</label>
-	<select id="volunteer-filter">
+
+<select id="volunteer-filter">
     <option value="All">All volunteers</option>
     <option value="Approved/Pending">Approved/Pending Approval</option>
     <option value="Approved">Approved volunteers</option>
@@ -14,14 +15,14 @@
     <option value="Disapproved">Disapproved volunteers</option>
     <option value="Inactive">Inactive volunteers</option>
 </select>
-    
-<ul id="volunteerList">
-    </ul>
-    <button>Add New Volunteer</button> 
 
+<button onclick="location.href='/volunteer-form'">
+    Add New Volunteer
+</button>
 
+<ul id="volunteerList"></ul>
 
-    <script src="/public/js/volunteers.js"></script>
+<script src="/public/js/volunteers.js"></script>
 
 </body>
 

@@ -26,6 +26,10 @@ app.use("/auth", authRoutes);
 
 const volunteerRoutes = require("./routes/volunteerRoutes");
 
+const volunteerApi = require("./routes/volunteers");
+
+app.use("/api/volunteers", volunteerApi);
+
 app.use("/volunteers", volunteerRoutes);
 
 app.use("/public", express.static(path.join(__dirname, "public")));
@@ -35,6 +39,10 @@ app.get("/", (req, res) => {
 });
 app.get("/volunteers", (req, res) => {
     res.sendFile(path.join(__dirname, "views", "volunteers.html"));
+});
+
+app.get("/volunteer-form", (req, res) => {
+    res.sendFile(path.join(__dirname, "views", "volunteer-form.html"));
 });
 
 app.listen(3000, () => {
