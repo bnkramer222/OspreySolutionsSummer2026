@@ -1,6 +1,7 @@
 const express = require("express");
 const path = require("path");
 const session = require("express-session");
+const requireAuth = require("./middleware/requireAuth");
 
 const app = express();
 
@@ -38,6 +39,10 @@ app.get("/", (req, res) => {
 
 app.get("/volunteers", (req, res) => {
     res.sendFile(path.join(__dirname, "views", "volunteers.html"));
+});
+
+app.get("/dashboard", requireAuth, (req, res) => {
+    res.sendFile(path.join(__dirname, "views", "dashboard.html"));
 });
 
 app.listen(3000, () => {

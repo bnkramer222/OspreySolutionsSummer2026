@@ -22,11 +22,9 @@ form.addEventListener("submit", async (event) => {
 
     const data = await response.json();
 
-    if (data.success) {
-
-        window.location.href = "/volunteers";
-
-    } else {
+   if (data.success) {
+    window.location.href = "/dashboard";
+} else {
 
         document.getElementById("errorMessage").textContent =
             "Login denied";
