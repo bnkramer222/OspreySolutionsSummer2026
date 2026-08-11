@@ -2,61 +2,219 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Opportunity Form</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Opportunity Form - VMS</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; max-width: 600px; }
-        label { display: block; margin-top: 12px; font-weight: bold; }
-        input, textarea, select { width: 100%; padding: 8px; margin-top: 4px; box-sizing: border-box; }
-        .btn-save { background: #4CAF50; color: white; border: none; padding: 10px 20px; margin-top: 20px; cursor: pointer; border-radius: 4px; }
-        .btn-cancel { background: #ccc; border: none; padding: 10px 20px; margin-top: 20px; cursor: pointer; border-radius: 4px; }
-        .error { color: red; font-size: 0.9em; display: none; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+        }
+
+        nav {
+            background: #0a0a0a;
+            padding: 0 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+        }
+
+        .nav-logo { font-size: 20px; font-weight: 800; color: white; }
+        .nav-logo span { color: #ff6b35; }
+        .nav-links { display: flex; gap: 8px; }
+
+        .nav-link {
+            color: #999;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .nav-link:hover { color: white; background: #ffffff15; }
+        .nav-link.active { color: white; background: #a855f7; }
+
+        .nav-logout {
+            background: #ffffff15;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            font-family: inherit;
+            transition: background 0.2s;
+        }
+
+        .nav-logout:hover { background: #ff6b35; }
+
+        .page-header {
+            background: #0a0a0a;
+            padding: 40px;
+            color: white;
+        }
+
+        .page-header h1 { font-size: 28px; font-weight: 800; }
+        .page-header h1 span { color: #a855f7; }
+        .page-header p { color: #999; margin-top: 6px; font-size: 14px; }
+
+        .content { max-width: 700px; margin: 0 auto; padding: 32px 40px; }
+
+        .form-card {
+            background: white;
+            border-radius: 20px;
+            padding: 36px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+        }
+
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+        .form-group { display: flex; flex-direction: column; gap: 6px; }
+        .form-group.full { grid-column: 1 / -1; }
+
+        label {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #666;
+        }
+
+        input, textarea, select {
+            padding: 12px 14px;
+            border: 2px solid #e5e5e5;
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.2s;
+            width: 100%;
+        }
+
+        input:focus, textarea:focus, select:focus { border-color: #a855f7; }
+        textarea { resize: vertical; min-height: 100px; }
+
+        .error-msg { font-size: 12px; color: #dc2626; display: none; }
+
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 28px;
+            padding-top: 28px;
+            border-top: 2px solid #f5f5f5;
+        }
+
+        .btn-save {
+            flex: 1;
+            padding: 14px;
+            background: #0a0a0a;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+            transition: background 0.2s;
+        }
+
+        .btn-save:hover { background: #a855f7; }
+
+        .btn-cancel {
+            padding: 14px 24px;
+            background: #f5f5f5;
+            color: #666;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+
+        .btn-cancel:hover { background: #e5e5e5; color: #0a0a0a; }
     </style>
 </head>
 <body>
-    <h1 id="form-title">Add New Opportunity</h1>
-
-    <form id="opportunity-form" method="POST">
-        <label>Opportunity Name *</label>
-        <input type="text" name="name" id="name" />
-        <span class="error" id="name-error">Name is required.</span>
-
-        <label>Center *</label>
-        <input type="text" name="center" id="center" />
-        <span class="error" id="center-error">Center is required.</span>
-
-        <label>Date *</label>
-        <input type="date" name="date" id="date" />
-        <span class="error" id="date-error">Date is required.</span>
-
-        <label>Description</label>
-        <textarea name="description" id="description" rows="4"></textarea>
-
-        <label>Skills Needed</label>
-        <input type="text" name="skills_needed" id="skills_needed" />
-
-        <label>Status</label>
-        <select name="status" id="status">
-            <option value="Active">Active</option>
-            <option value="Inactive">Inactive</option>
-        </select>
-
-        <div>
-            <button type="submit" class="btn-save" onclick="return validateForm()">Save</button>
-            <button type="button" class="btn-cancel" onclick="window.location.href='/opportunities'">Cancel</button>
+    <nav>
+        <div class="nav-logo">Osprey<span>VMS</span></div>
+        <div class="nav-links">
+            <a href="/dashboard" class="nav-link">Dashboard</a>
+            <a href="/volunteers" class="nav-link">Volunteers</a>
+            <a href="/opportunities" class="nav-link active">Opportunities</a>
         </div>
-    </form>
+        <button class="nav-logout" onclick="window.location.href='/'">Log Out</button>
+    </nav>
+
+    <div class="page-header">
+        <h1 id="form-title">Add <span>Opportunity</span></h1>
+        <p>Fill in the details below to create a new volunteer opportunity.</p>
+    </div>
+
+    <div class="content">
+        <div class="form-card">
+            <form id="opportunity-form" method="POST">
+                <div class="form-grid">
+                    <div class="form-group full">
+                        <label>Opportunity Name *</label>
+                        <input type="text" name="name" id="name" placeholder="e.g. Food Bank Volunteer Day" />
+                        <span class="error-msg" id="name-error">Name is required.</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Center *</label>
+                        <input type="text" name="center" id="center" placeholder="e.g. Downtown Center" />
+                        <span class="error-msg" id="center-error">Center is required.</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Date *</label>
+                        <input type="date" name="date" id="date" />
+                        <span class="error-msg" id="date-error">Date is required.</span>
+                    </div>
+
+                    <div class="form-group full">
+                        <label>Description</label>
+                        <textarea name="description" id="description" placeholder="Describe what volunteers will be doing..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Skills Needed</label>
+                        <input type="text" name="skills_needed" id="skills_needed" placeholder="e.g. Communication, Lifting" />
+                    </div>
+
+                    <div class="form-group">
+                        <label>Status</label>
+                        <select name="status" id="status">
+                            <option value="Active">Active</option>
+                            <option value="Inactive">Inactive</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" onclick="window.location.href='/opportunities'">Cancel</button>
+                    <button type="submit" class="btn-save" onclick="return validateForm()">Save Opportunity →</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <script>
-        // Check if we are editing an existing opportunity
         const pathParts = window.location.pathname.split("/");
         const isEdit = pathParts.includes("edit");
         const opportunityId = isEdit ? pathParts[2] : null;
 
         if (isEdit) {
-            document.getElementById("form-title").textContent = "Edit Opportunity";
+            document.getElementById("form-title").innerHTML = 'Edit <span style="color:#a855f7">Opportunity</span>';
             document.getElementById("opportunity-form").action = `/opportunities/${opportunityId}/edit`;
 
-            // Load existing data
             fetch(`/opportunities/${opportunityId}/data`)
                 .then(res => res.json())
                 .then(data => {
@@ -72,8 +230,6 @@
         }
 
         function validateForm() {
-            let valid = true;
-
             const name = document.getElementById("name").value.trim();
             const center = document.getElementById("center").value.trim();
             const date = document.getElementById("date").value.trim();
@@ -82,9 +238,7 @@
             document.getElementById("center-error").style.display = center ? "none" : "block";
             document.getElementById("date-error").style.display = date ? "none" : "block";
 
-            if (!name || !center || !date) valid = false;
-
-            return valid;
+            return !!(name && center && date);
         }
     </script>
 </body>

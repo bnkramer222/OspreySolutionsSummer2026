@@ -1,13 +1,204 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <title>Admin Dashboard</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VMS Dashboard</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+        }
+
+        nav {
+            background: #0a0a0a;
+            padding: 0 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+        }
+
+        .nav-logo { font-size: 20px; font-weight: 800; color: white; letter-spacing: -0.5px; }
+        .nav-logo span { color: #ff6b35; }
+
+        .nav-right { display: flex; align-items: center; gap: 20px; }
+        .nav-user { color: #999; font-size: 14px; }
+
+        .nav-logout {
+            background: #ffffff15;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            font-family: inherit;
+            transition: background 0.2s;
+        }
+
+        .nav-logout:hover { background: #ff6b35; }
+
+        .hero {
+            background: #0a0a0a;
+            padding: 60px 40px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50px; right: -50px;
+            width: 300px; height: 300px;
+            background: #ff6b35;
+            border-radius: 50%;
+            opacity: 0.1;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -80px; left: 30%;
+            width: 200px; height: 200px;
+            background: #a855f7;
+            border-radius: 50%;
+            opacity: 0.1;
+        }
+
+        .hero h1 { font-size: 42px; font-weight: 800; margin-bottom: 12px; letter-spacing: -1px; }
+        .hero h1 span { color: #ff6b35; }
+        .hero p { color: #999; font-size: 16px; max-width: 500px; }
+
+        .content { max-width: 1100px; margin: 0 auto; padding: 48px 40px; }
+
+        .section-title {
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #999;
+            margin-bottom: 20px;
+        }
+
+        .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 48px; }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 36px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-decoration: none;
+            display: block;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            border-color: #0a0a0a;
+        }
+
+        .card-accent { position: absolute; top: 0; left: 0; width: 100%; height: 4px; }
+        .card-1 .card-accent { background: linear-gradient(90deg, #ff6b35, #ff9a6c); }
+        .card-2 .card-accent { background: linear-gradient(90deg, #a855f7, #c084fc); }
+
+        .card-icon { font-size: 40px; margin-bottom: 16px; display: block; }
+
+        .card h2 { font-size: 22px; font-weight: 800; color: #0a0a0a; margin-bottom: 8px; }
+        .card p { color: #666; font-size: 14px; line-height: 1.6; margin-bottom: 24px; }
+
+        .card-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #0a0a0a;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 700;
+            transition: background 0.2s;
+        }
+
+        .card-1:hover .card-btn { background: #ff6b35; }
+        .card-2:hover .card-btn { background: #a855f7; }
+
+        .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+
+        .stat { background: white; border-radius: 16px; padding: 24px; text-align: center; }
+        .stat-number { font-size: 36px; font-weight: 800; color: #0a0a0a; }
+        .stat-label { font-size: 13px; color: #999; margin-top: 4px; }
+        .stat-1 .stat-number { color: #ff6b35; }
+        .stat-2 .stat-number { color: #a855f7; }
+        .stat-3 .stat-number { color: #00d4ff; }
+    </style>
 </head>
 <body>
-    <h1>Admin Dashboard</h1>
-    <p>Welcome. What would you like to manage?</p>
-    <ul>
-        <li><a href="/volunteers">Manage Volunteers</a></li>
-        <li><a href="/opportunities">Manage Opportunities</a></li>
-    </ul>
+    <nav>
+        <div class="nav-logo">Osprey<span>VMS</span></div>
+        <div class="nav-right">
+            <span class="nav-user">Admin</span>
+            <button class="nav-logout" onclick="window.location.href='/'">Log Out</button>
+        </div>
+    </nav>
+
+    <div class="hero">
+        <h1>Good to see you, <span>Admin</span> 👋</h1>
+        <p>Manage your volunteers and opportunities all in one place.</p>
+    </div>
+
+    <div class="content">
+        <p class="section-title">What would you like to manage?</p>
+
+        <div class="cards">
+            <a href="/volunteers" class="card card-1">
+                <div class="card-accent"></div>
+                <span class="card-icon">👥</span>
+                <h2>Manage Volunteers</h2>
+                <p>View, add, edit, and filter volunteers. Track approval status and match volunteers to opportunities.</p>
+                <div class="card-btn">Go to Volunteers →</div>
+            </a>
+
+            <a href="/opportunities" class="card card-2">
+                <div class="card-accent"></div>
+                <span class="card-icon">📋</span>
+                <h2>Manage Opportunities</h2>
+                <p>Create and manage volunteer opportunities. Filter by date or center and view volunteer matches.</p>
+                <div class="card-btn">Go to Opportunities →</div>
+            </a>
+        </div>
+
+        <p class="section-title">Quick Stats</p>
+        <div class="stats">
+            <div class="stat stat-1">
+                <div class="stat-number" id="vol-count">—</div>
+                <div class="stat-label">Total Volunteers</div>
+            </div>
+            <div class="stat stat-2">
+                <div class="stat-number" id="opp-count">—</div>
+                <div class="stat-label">Total Opportunities</div>
+            </div>
+            <div class="stat stat-3">
+                <div class="stat-number">✓</div>
+                <div class="stat-label">System Online</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        fetch('/opportunities?filter=all')
+            .then(r => r.json())
+            .then(d => {
+                document.getElementById('opp-count').textContent = d.opportunities.length;
+            }).catch(() => {});
+    </script>
 </body>
 </html>
