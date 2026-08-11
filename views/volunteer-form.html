@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Volunteer Form</title>
+</head>
+
+<body>
+    <h1 id="title">Volunteer</h1>
+    <p id="message"></p>
+
+    <form id="form">
+        <input id="first_name" placeholder="First Name" required><br>
+        <input id="last_name" placeholder="Last Name" required><br>
+        <input id="username" placeholder="Username" required><br>
+        <input id="password" placeholder="Password" required><br>
+        <input id="preferred_centers" placeholder="Preferred Centers"><br>
+        <input id="skills_interests" placeholder="Skills / Interests"><br>
+        <input id="availability_times" placeholder="Availability Times"><br>
+        <input id="address" placeholder="Address"><br>
+        <input id="phone_numbers" placeholder="Phone Numbers"><br>
+        <input id="email" type="email" placeholder="Email"><br>
+        <input id="educational_background" placeholder="Educational Background"><br>
+        <input id="current_licenses" placeholder="Current Licenses"><br>
+        <input id="emergency_contact_name" placeholder="Emergency Contact Name"><br>
+        <input id="emergency_contact_phone" placeholder="Emergency Contact Phone"><br>
+        <input id="emergency_contact_email" type="email" placeholder="Emergency Contact Email"><br>
+        <input id="emergency_contact_address" placeholder="Emergency Contact Address"><br><br>
+
+        <label>
+            <input id="drivers_license_on_file" type="checkbox">
+            Driver's License on File
+        </label><br>
+
+        <label>
+            <input id="social_security_card_on_file" type="checkbox">
+            Social Security Card on File
+        </label><br><br>
+
+        <select id="approval_status">
+            <option>Approved</option>
+            <option>Pending Approval</option>
+            <option>Disapproved</option>
+            <option>Inactive</option>
+        </select><br><br>
+
+        <button type="submit" id="save">Save</button>
+        <button type="button" onclick="location.href='/volunteers'">Cancel</button>
+    </form>
+
+    <script>
+        const id = new URLSearchParams(location.search).get("id");
+        const edit = id !== null;
+        const form = document.getElementById("form");
+        const message = document.getElementById("message");
+
+        const fields = [
+            "first_name", "last_name", "username", "password",
+            "preferred_centers", "skills_interests", "availability_times",
+            "address", "phone_numbers", "email", "educational_background",
+            "current_licenses", "emergency_contact_name",
+            "emergency_contact_phone", "emergency_contact_email",
+            "emergency_contact_address", "approval_status"
+        ];
+
+        async function loadVolunteer() {
+            if (!edit) {
+                document.getElementById("title").textContent = "Add Volunteer";
+                document.getElementById("approval_status").value = "Pending Approval";
+                return;
+            }
+
+            const response = await fetch(`/api/volunteers/${id}`);
+            const volunteer = await response.json();
+
+            fields.forEach(field => {
+                document.getElementById(field).value = volunteer[field] || "";
+            });
+
+            document.getElementById("drivers_license_on_file").checked =
+                volunteer.drivers_license_on_file === 1;
+
+            document.getElementById("social_security_card_on_file").checked =
+                volunteer.social_security_card_on_file === 1;
+        }
+
+        form.addEventListener("submit", async e => {
+            e.preventDefault();
+
+            const data = {};
+
+            fields.forEach(field => {
+                data[field] = document.getElementById(field).value;
+            });
+
+            data.drivers_license_on_file =
+                document.getElementById("drivers_license_on_file").checked ? 1 : 0;
+
+            data.social_security_card_on_file =
+                document.getElementById("social_security_card_on_file").checked ? 1 : 0;
+
+            if (!data.first_name || !data.last_name || !data.username || !data.password) {
+                message.textContent = "Please complete required fields.";
+                return;
+            }
+
+            const response = await fetch(
+                edit ? `/api/volunteers/${id}` : "/api/volunteers",
+                {
+                    method: edit ? "PUT" : "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(data)
+                }
+            );
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                message.textContent = result.error;
+                return;
+            }
+
+            location.href = "/volunteers";
+        });
+        loadVolunteer();
+    </script>
+</body>
+</html>
