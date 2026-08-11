@@ -20,19 +20,22 @@ app.use(
         }
     })
 );
-const authRoutes = require("./routes/authRoutes");
 
+const authRoutes = require("./routes/authRoutes");
 app.use("/auth", authRoutes);
 
 const volunteerRoutes = require("./routes/volunteerRoutes");
-
 app.use("/volunteers", volunteerRoutes);
+
+const opportunityRoutes = require("./routes/opportunityRoutes");
+app.use("/opportunities", opportunityRoutes);
 
 app.use("/public", express.static(path.join(__dirname, "public")));
 
 app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "views", "login.html"));
 });
+
 app.get("/volunteers", (req, res) => {
     res.sendFile(path.join(__dirname, "views", "volunteers.html"));
 });

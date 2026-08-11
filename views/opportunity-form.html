@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Opportunity Form</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; max-width: 600px; }
+        label { display: block; margin-top: 12px; font-weight: bold; }
+        input, textarea, select { width: 100%; padding: 8px; margin-top: 4px; box-sizing: border-box; }
+        .btn-save { background: #4CAF50; color: white; border: none; padding: 10px 20px; margin-top: 20px; cursor: pointer; border-radius: 4px; }
+        .btn-cancel { background: #ccc; border: none; padding: 10px 20px; margin-top: 20px; cursor: pointer; border-radius: 4px; }
+        .error { color: red; font-size: 0.9em; display: none; }
+    </style>
+</head>
+<body>
+    <h1 id="form-title">Add New Opportunity</h1>
+
+    <form id="opportunity-form" method="POST">
+        <label>Opportunity Name *</label>
+        <input type="text" name="name" id="name" />
+        <span class="error" id="name-error">Name is required.</span>
+
+        <label>Center *</label>
+        <input type="text" name="center" id="center" />
+        <span class="error" id="center-error">Center is required.</span>
+
+        <label>Date *</label>
+        <input type="date" name="date" id="date" />
+        <span class="error" id="date-error">Date is required.</span>
+
+        <label>Description</label>
+        <textarea name="description" id="description" rows="4"></textarea>
+
+        <label>Skills Needed</label>
+        <input type="text" name="skills_needed" id="skills_needed" />
+
+        <label>Status</label>
+        <select name="status" id="status">
+            <option value="Active">Active</option>
+            <option value="Inactive">Inactive</option>
+        </select>
+
+        <div>
+            <button type="submit" class="btn-save" onclick="return validateForm()">Save</button>
+            <button type="button" class="btn-cancel" onclick="window.location.href='/opportunities'">Cancel</button>
+        </div>
+    </form>
+
+    <script>
+        // Check if we are editing an existing opportunity
+        const pathParts = window.location.pathname.split("/");
+        const isEdit = pathParts.includes("edit");
+        const opportunityId = isEdit ? pathParts[2] : null;
+
+        if (isEdit) {
+            document.getElementById("form-title").textContent = "Edit Opportunity";
+            document.getElementById("opportunity-form").action = `/opportunities/${opportunityId}/edit`;
+
+            // Load existing data
+            fetch(`/opportunities/${opportunityId}/data`)
+                .then(res => res.json())
+                .then(data => {
+                    document.getElementById("name").value = data.name;
+                    document.getElementById("center").value = data.center;
+                    document.getElementById("date").value = data.date;
+                    document.getElementById("description").value = data.description || "";
+                    document.getElementById("skills_needed").value = data.skills_needed || "";
+                    document.getElementById("status").value = data.status;
+                });
+        } else {
+            document.getElementById("opportunity-form").action = "/opportunities/new";
+        }
+
+        function validateForm() {
+            let valid = true;
+
+            const name = document.getElementById("name").value.trim();
+            const center = document.getElementById("center").value.trim();
+            const date = document.getElementById("date").value.trim();
+
+            document.getElementById("name-error").style.display = name ? "none" : "block";
+            document.getElementById("center-error").style.display = center ? "none" : "block";
+            document.getElementById("date-error").style.display = date ? "none" : "block";
+
+            if (!name || !center || !date) valid = false;
+
+            return valid;
+        }
+    </script>
+</body>
+</html>
