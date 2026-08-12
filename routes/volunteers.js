@@ -4,6 +4,10 @@ const express = require("express");
 const router = express.Router();
 const db = require("../db/database");
 
+router.get("/test", (req, res) => {
+    res.send("volunteer API works");
+});
+
 router.get("/", (req, res) => {
     db.all(
         "SELECT * FROM volunteers",
