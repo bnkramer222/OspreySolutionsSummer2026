@@ -3,6 +3,7 @@
 const express = require("express");
 const router = express.Router();
 const db = require("../db/database");
+console.log("LOADED VOLUNTEERS API FILE");
 
 router.get("/test", (req, res) => {
     res.send("volunteer API works");
