@@ -142,6 +142,7 @@
         }
 
         .no-results .icon { font-size: 48px; margin-bottom: 12px; }
+        .no-results h2 { font-size: 20px; color: #333; margin-bottom: 6px; }
         .no-results p { font-size: 16px; font-weight: 600; }
 
         .opportunity-grid { display: grid; gap: 16px; }
@@ -280,7 +281,7 @@
 
     <div class="content">
         <div class="toolbar">
-            <input type="text" class="search-box" id="search-input" placeholder="🔍  Search opportunities..." oninput="searchOpportunities()" />
+            <input type="text" class="search-box" id="search-input" aria-label="Search opportunities" placeholder="🔍  Search opportunities..." oninput="searchOpportunities()" />
             <select id="opportunity-filter" onchange="applyFilter()">
                 <option value="all">All Opportunities</option>
                 <option value="recent">Most Recent (60 days)</option>
@@ -289,9 +290,10 @@
             <a href="/opportunities/new" class="btn-add">+ Add New</a>
         </div>
 
-        <div class="no-results" id="no-results">
+        <div class="no-results" id="no-results" role="status" aria-live="polite">
             <div class="icon">🔍</div>
-            <p>No opportunities matched your search.</p>
+            <h2 id="no-results-heading">No matches found</h2>
+            <p id="no-results-message">No opportunities matched your search.</p>
         </div>
 
         <div class="opportunity-grid" id="opportunity-grid"></div>
@@ -305,21 +307,51 @@
     </div>
 
     <script>
+        let latestOpportunityRequest = 0;
+
         async function loadOpportunities(filter = "all", search = "") {
+            const requestId = ++latestOpportunityRequest;
             let url = `/opportunities?filter=${filter}`;
             if (search) url += `&search=${encodeURIComponent(search)}`;
 
-            const res = await fetch(url);
-            const data = await res.json();
-            renderGrid(data.opportunities);
+            try {
+                const res = await fetch(url);
+                if (!res.ok) throw new Error(`Request failed with status ${res.status}`);
+
+                const data = await res.json();
+                if (requestId !== latestOpportunityRequest) return;
+
+                renderGrid(data.opportunities, {
+                    search: data.search || "",
+                    message: data.message
+                });
+            } catch (error) {
+                if (requestId !== latestOpportunityRequest) return;
+                renderGrid([], { loadError: true });
+            }
         }
 
-        function renderGrid(opportunities) {
+        function renderGrid(opportunities, context = {}) {
             const grid = document.getElementById("opportunity-grid");
             const noResults = document.getElementById("no-results");
+            const noResultsHeading = document.getElementById("no-results-heading");
+            const noResultsMessage = document.getElementById("no-results-message");
             grid.innerHTML = "";
 
             if (!opportunities || opportunities.length === 0) {
+                const isSearch = Boolean(context.search && context.search.trim());
+
+                if (context.loadError) {
+                    noResultsHeading.textContent = "Unable to load opportunities";
+                    noResultsMessage.textContent = "Please try again in a moment.";
+                } else if (isSearch) {
+                    noResultsHeading.textContent = "No matches found";
+                    noResultsMessage.textContent = context.message || "No opportunities matched your search.";
+                } else {
+                    noResultsHeading.textContent = "No opportunities available";
+                    noResultsMessage.textContent = "Add an opportunity or change the selected filter.";
+                }
+
                 noResults.style.display = "block";
                 return;
             }
