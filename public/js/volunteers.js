@@ -56,7 +56,7 @@ function listVolunteers() {
 
     volunteers.forEach(volunteer => {
         const listItem = document.createElement("li");
-        listItem.textContent = `${volunteer.firstName} ${volunteer.lastName} - ${volunteer.status}`;
+        listItem.textContent = `${volunteer.first_name} ${volunteer.last_name} - ${volunteer.approval_status}`;
         volunteerList.appendChild(listItem);
     });
 }
