@@ -4,12 +4,13 @@ const opportunityController = {
 
     list: (req, res) => {
         const { filter, search } = req.query;
+        const searchTerm = typeof search === "string" ? search.trim() : "";
 
-        if (filter || search) {
+        if (filter || searchTerm) {
             let opportunities = [];
 
-            if (search) {
-                opportunities = opportunityModel.search(search);
+            if (searchTerm) {
+                opportunities = opportunityModel.search(searchTerm);
             } else if (filter === "recent") {
                 opportunities = opportunityModel.getRecent();
             } else if (filter === "center") {
@@ -18,7 +19,17 @@ const opportunityController = {
                 opportunities = opportunityModel.getAll();
             }
 
-            return res.json({ opportunities, filter, search });
+            const noResults = opportunities.length === 0;
+
+            return res.json({
+                opportunities,
+                filter: filter || "all",
+                search: searchTerm,
+                noResults,
+                message: searchTerm && noResults
+                    ? "No opportunities matched your search."
+                    : null
+            });
         }
 
         res.sendFile(require("path").join(__dirname, "../views/opportunities.html"));
