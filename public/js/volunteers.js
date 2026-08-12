@@ -52,11 +52,27 @@ function deleteVolunteer(id) {
 }
 function listVolunteers() {
     const volunteerList = document.getElementById("volunteerList");
+    const filter = document.getElementById("volunteer-filter").value;
     volunteerList.innerHTML = "";
+let filteredVolunteers = volunteers;
 
-    volunteers.forEach(volunteer => {
+    if (filter === "Approved/Pending") {
+        filteredVolunteers = volunteers.filter(volunteer =>
+            volunteer.approval_status === "Approved" ||
+            volunteer.approval_status === "Pending Approval"
+        );
+    } else if (filter !== "All") {
+        filteredVolunteers = volunteers.filter(
+            volunteer => volunteer.approval_status === filter
+        );
+    }
+
+    filteredVolunteers.forEach(volunteer => {
         const listItem = document.createElement("li");
-        listItem.textContent = `${volunteer.first_name} ${volunteer.last_name} - ${volunteer.approval_status}`;
+
+        listItem.textContent =
+            `${volunteer.first_name} ${volunteer.last_name} - ${volunteer.approval_status}`;
+
         volunteerList.appendChild(listItem);
     });
 }
