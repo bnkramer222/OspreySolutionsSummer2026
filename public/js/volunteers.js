@@ -1,4 +1,4 @@
-const volunteers = [
+let volunteers = [
     {
         id: 1,
         firstName: "John",
@@ -18,6 +18,12 @@ const volunteers = [
         status: "Inactive"
     }
 ];
+
+async function loadVolunteers() { 
+    const response = await fetch("/api/volunteers");
+    volunteers = await response.json();
+    listVolunteers();
+}
 
 function getVolunteers() {
     return volunteers;
@@ -56,5 +62,5 @@ function listVolunteers() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    listVolunteers();
+    loadVolunteers();
 }); 
