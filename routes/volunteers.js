@@ -4,6 +4,24 @@ const express = require("express");
 const router = express.Router();
 const db = require("../db/database");
 
+router.get("/", (req, res) => {
+    db.all(
+        "SELECT * FROM volunteers",
+        [],
+        (err, rows) => {
+            if (err) {
+                console.error(err.message);
+
+                return res.status(500).json({
+                    error: "Unable to retrieve volunteers."
+                });
+            }
+
+            res.json(rows);
+        }
+    );
+});
+
 router.get("/search", (req, res) => {
     const searchTerm = req.query.q || "";
     const searchValue = `%${searchTerm}%`;
