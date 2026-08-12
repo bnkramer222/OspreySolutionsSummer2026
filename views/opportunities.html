@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Opportunities - VMS</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+        }
+
+        nav {
+            background: #0a0a0a;
+            padding: 0 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+        }
+
+        .nav-logo { font-size: 20px; font-weight: 800; color: white; }
+        .nav-logo span { color: #ff6b35; }
+        .nav-links { display: flex; gap: 8px; }
+
+        .nav-link {
+            color: #999;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .nav-link:hover { color: white; background: #ffffff15; }
+        .nav-link.active { color: white; background: #a855f7; }
+
+        .nav-logout {
+            background: #ffffff15;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            font-family: inherit;
+            transition: background 0.2s;
+        }
+
+        .nav-logout:hover { background: #ff6b35; }
+
+        .page-header {
+            background: #0a0a0a;
+            padding: 40px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: -60px; right: -60px;
+            width: 250px; height: 250px;
+            background: #a855f7;
+            border-radius: 50%;
+            opacity: 0.15;
+        }
+
+        .page-header h1 { font-size: 32px; font-weight: 800; letter-spacing: -0.5px; }
+        .page-header h1 span { color: #a855f7; }
+        .page-header p { color: #999; margin-top: 6px; font-size: 14px; }
+
+        .content { max-width: 1100px; margin: 0 auto; padding: 32px 40px; }
+
+        .toolbar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 200px;
+            padding: 12px 16px;
+            border: 2px solid #e5e5e5;
+            border-radius: 12px;
+            font-size: 14px;
+            font-family: inherit;
+            outline: none;
+            background: white;
+            transition: border-color 0.2s;
+        }
+
+        .search-box:focus { border-color: #a855f7; }
+
+        select {
+            padding: 12px 16px;
+            border: 2px solid #e5e5e5;
+            border-radius: 12px;
+            font-size: 14px;
+            font-family: inherit;
+            outline: none;
+            background: white;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+
+        select:focus { border-color: #a855f7; }
+
+        .btn-add {
+            background: #0a0a0a;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+            transition: background 0.2s;
+            white-space: nowrap;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-add:hover { background: #a855f7; }
+
+        .no-results {
+            display: none;
+            text-align: center;
+            padding: 60px;
+            color: #999;
+            background: white;
+            border-radius: 16px;
+        }
+
+        .no-results .icon { font-size: 48px; margin-bottom: 12px; }
+        .no-results h2 { font-size: 20px; color: #333; margin-bottom: 6px; }
+        .no-results p { font-size: 16px; font-weight: 600; }
+
+        .opportunity-grid { display: grid; gap: 16px; }
+
+        .opportunity-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 2px solid transparent;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            gap: 16px;
+        }
+
+        .opportunity-card:hover {
+            border-color: #a855f7;
+            box-shadow: 0 8px 24px rgba(168, 85, 247, 0.1);
+        }
+
+        .opp-left { display: flex; align-items: center; gap: 16px; flex: 1; }
+
+        .opp-icon {
+            width: 48px; height: 48px;
+            background: #f3e8ff;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            flex-shrink: 0;
+        }
+
+        .opp-info h3 { font-size: 16px; font-weight: 700; color: #0a0a0a; margin-bottom: 4px; }
+        .opp-meta { display: flex; gap: 12px; flex-wrap: wrap; }
+        .opp-tag { font-size: 12px; color: #666; display: flex; align-items: center; gap: 4px; }
+
+        .badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-active { background: #dcfce7; color: #16a34a; }
+        .badge-inactive { background: #fee2e2; color: #dc2626; }
+
+        .opp-actions { display: flex; gap: 8px; flex-shrink: 0; }
+
+        .btn {
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            border: none;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+
+        .btn-edit { background: #f3f4f6; color: #0a0a0a; }
+        .btn-edit:hover { background: #0a0a0a; color: white; }
+        .btn-delete { background: #fee2e2; color: #dc2626; }
+        .btn-delete:hover { background: #dc2626; color: white; }
+        .btn-matches { background: #f3e8ff; color: #a855f7; }
+        .btn-matches:hover { background: #a855f7; color: white; }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: 99;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 32px;
+            border-radius: 20px;
+            min-width: 340px;
+            z-index: 100;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.3);
+        }
+
+        .modal h3 { font-size: 18px; font-weight: 800; margin-bottom: 16px; color: #0a0a0a; }
+        .modal ul { list-style: none; }
+
+        .modal ul li {
+            padding: 10px 0;
+            border-bottom: 1px solid #f5f5f5;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .modal-close {
+            margin-top: 20px;
+            width: 100%;
+            padding: 12px;
+            background: #0a0a0a;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: 700;
+            transition: background 0.2s;
+        }
+
+        .modal-close:hover { background: #a855f7; }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-logo">Osprey<span>VMS</span></div>
+        <div class="nav-links">
+            <a href="/dashboard" class="nav-link">Dashboard</a>
+            <a href="/volunteers" class="nav-link">Volunteers</a>
+            <a href="/opportunities" class="nav-link active">Opportunities</a>
+        </div>
+        <button class="nav-logout" onclick="window.location.href='/'">Log Out</button>
+    </nav>
+
+    <div class="page-header">
+        <h1>Manage <span>Opportunities</span> 📋</h1>
+        <p>Create, edit, and track volunteer opportunities across all centers.</p>
+    </div>
+
+    <div class="content">
+        <div class="toolbar">
+            <input type="text" class="search-box" id="search-input" aria-label="Search opportunities" placeholder="🔍  Search opportunities..." oninput="searchOpportunities()" />
+            <select id="opportunity-filter" onchange="applyFilter()">
+                <option value="all">All Opportunities</option>
+                <option value="recent">Most Recent (60 days)</option>
+                <option value="center">By Center</option>
+            </select>
+            <a href="/opportunities/new" class="btn-add">+ Add New</a>
+        </div>
+
+        <div class="no-results" id="no-results" role="status" aria-live="polite">
+            <div class="icon">🔍</div>
+            <h2 id="no-results-heading">No matches found</h2>
+            <p id="no-results-message">No opportunities matched your search.</p>
+        </div>
+
+        <div class="opportunity-grid" id="opportunity-grid"></div>
+    </div>
+
+    <div class="overlay" id="overlay" onclick="closeMatches()"></div>
+    <div class="modal" id="matches-modal">
+        <h3>👥 Matched Volunteers</h3>
+        <ul id="matches-list"></ul>
+        <button class="modal-close" onclick="closeMatches()">Close</button>
+    </div>
+
+    <script>
+        let latestOpportunityRequest = 0;
+
+        async function loadOpportunities(filter = "all", search = "") {
+            const requestId = ++latestOpportunityRequest;
+            let url = `/opportunities?filter=${filter}`;
+            if (search) url += `&search=${encodeURIComponent(search)}`;
+
+            try {
+                const res = await fetch(url);
+                if (!res.ok) throw new Error(`Request failed with status ${res.status}`);
+
+                const data = await res.json();
+                if (requestId !== latestOpportunityRequest) return;
+
+                renderGrid(data.opportunities, {
+                    search: data.search || "",
+                    message: data.message
+                });
+            } catch (error) {
+                if (requestId !== latestOpportunityRequest) return;
+                renderGrid([], { loadError: true });
+            }
+        }
+
+        function renderGrid(opportunities, context = {}) {
+            const grid = document.getElementById("opportunity-grid");
+            const noResults = document.getElementById("no-results");
+            const noResultsHeading = document.getElementById("no-results-heading");
+            const noResultsMessage = document.getElementById("no-results-message");
+            grid.innerHTML = "";
+
+            if (!opportunities || opportunities.length === 0) {
+                const isSearch = Boolean(context.search && context.search.trim());
+
+                if (context.loadError) {
+                    noResultsHeading.textContent = "Unable to load opportunities";
+                    noResultsMessage.textContent = "Please try again in a moment.";
+                } else if (isSearch) {
+                    noResultsHeading.textContent = "No matches found";
+                    noResultsMessage.textContent = context.message || "No opportunities matched your search.";
+                } else {
+                    noResultsHeading.textContent = "No opportunities available";
+                    noResultsMessage.textContent = "Add an opportunity or change the selected filter.";
+                }
+
+                noResults.style.display = "block";
+                return;
+            }
+
+            noResults.style.display = "none";
+
+            opportunities.forEach(op => {
+                const card = document.createElement("div");
+                card.className = "opportunity-card";
+                card.innerHTML = `
+                    <div class="opp-left">
+                        <div class="opp-icon">📋</div>
+                        <div class="opp-info">
+                            <h3>${op.name}</h3>
+                            <div class="opp-meta">
+                                <span class="opp-tag">📍 ${op.center}</span>
+                                <span class="opp-tag">📅 ${op.date}</span>
+                                ${op.skills_needed ? `<span class="opp-tag">🛠 ${op.skills_needed}</span>` : ''}
+                                <span class="badge ${op.status === 'Active' ? 'badge-active' : 'badge-inactive'}">${op.status}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="opp-actions">
+                        <button class="btn btn-matches" onclick="viewMatches(${op.id})">Matches</button>
+                        <button class="btn btn-edit" onclick="window.location.href='/opportunities/${op.id}/edit'">Edit</button>
+                        <form method="POST" action="/opportunities/${op.id}/delete" style="margin:0">
+                            <button type="submit" class="btn btn-delete" onclick="return confirm('Delete this opportunity?')">Delete</button>
+                        </form>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function applyFilter() {
+            const filter = document.getElementById("opportunity-filter").value;
+            const search = document.getElementById("search-input").value;
+            loadOpportunities(filter, search);
+        }
+
+        function searchOpportunities() {
+            const filter = document.getElementById("opportunity-filter").value;
+            const search = document.getElementById("search-input").value;
+            loadOpportunities(filter, search);
+        }
+
+        async function viewMatches(id) {
+            const res = await fetch(`/opportunities/${id}/matches`);
+            const data = await res.json();
+            const list = document.getElementById("matches-list");
+            list.innerHTML = "";
+
+            if (!data.matches || data.matches.length === 0) {
+                list.innerHTML = "<li>No volunteers matched yet.</li>";
+            } else {
+                data.matches.forEach(v => {
+                    const li = document.createElement("li");
+                    li.textContent = `${v.first_name} ${v.last_name}`;
+                    list.appendChild(li);
+                });
+            }
+
+            document.getElementById("matches-modal").style.display = "block";
+            document.getElementById("overlay").style.display = "block";
+        }
+
+        function closeMatches() {
+            document.getElementById("matches-modal").style.display = "none";
+            document.getElementById("overlay").style.display = "none";
+        }
+
+        loadOpportunities();
+    </script>
+</body>
+</html>
