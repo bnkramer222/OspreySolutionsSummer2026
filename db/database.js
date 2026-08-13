@@ -20,7 +20,7 @@ db.exec(`
         opportunity_id INTEGER
     );
 
-    //added volunteer table
+
     CREATE TABLE IF NOT EXISTS volunteers (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     first_name TEXT NOT NULL,
