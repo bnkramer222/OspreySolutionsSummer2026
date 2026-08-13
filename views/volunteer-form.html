@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Volunteer Form - VMS</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+        }
+
+        nav {
+            background: #0a0a0a;
+            padding: 0 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+        }
+
+        .nav-logo {
+            font-size: 20px;
+            font-weight: 800;
+            color: white;
+        }
+
+        .nav-logo span {
+            color: #ff6b35;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 8px;
+        }
+
+        .nav-link {
+            color: #999;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .nav-link:hover {
+            color: white;
+            background: #ffffff15;
+        }
+
+        .nav-link.active {
+            color: white;
+            background: #ff6b35;
+        }
+
+        .page-header {
+            background: #0a0a0a;
+            padding: 40px;
+            color: white;
+        }
+
+        .page-header h1 {
+            font-size: 32px;
+            font-weight: 800;
+        }
+
+        .page-header h1 span {
+            color: #ff6b35;
+        }
+
+        .page-header p {
+            color: #999;
+            margin-top: 6px;
+        }
+
+        .content {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 32px 40px;
+        }
+
+        .form-card {
+            background: white;
+            border-radius: 20px;
+            padding: 32px;
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+        }
+
+        .form-section h2 {
+            font-size: 16px;
+            margin-bottom: 16px;
+            color: #0a0a0a;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 12px 14px;
+            border: 2px solid #e5e5e5;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 14px;
+            outline: none;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: #ff6b35;
+        }
+
+        .checkbox-row {
+            display: flex;
+            gap: 24px;
+            margin-top: 12px;
+        }
+
+        .checkbox-row label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        .checkbox-row input {
+            width: auto;
+        }
+
+        .actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        button {
+            padding: 12px 22px;
+            border: none;
+            border-radius: 10px;
+            font-family: inherit;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .save {
+            background: #0a0a0a;
+            color: white;
+        }
+
+        .save:hover {
+            background: #ff6b35;
+        }
+
+        .cancel {
+            background: #e5e5e5;
+            color: #0a0a0a;
+        }
+
+        #message {
+            color: #dc2626;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <div class="nav-logo">Osprey<span>VMS</span></div>
+
+        <div class="nav-links">
+            <a href="/dashboard" class="nav-link">Dashboard</a>
+            <a href="/volunteers" class="nav-link active">Volunteers</a>
+            <a href="/opportunities" class="nav-link">Opportunities</a>
+        </div>
+    </nav>
+
+    <div class="page-header">
+        <h1 id="title">Add <span>Volunteer</span></h1>
+        <p>Create or update volunteer information.</p>
+    </div>
+
+    <div class="content">
+
+        <div class="form-card">
+
+            <p id="message"></p>
+
+            <form id="form">
+
+                <div class="form-section">
+                    <h2>Basic Information</h2>
+
+                    <div class="form-grid">
+                        <input id="first_name" placeholder="First Name" required>
+                        <input id="last_name" placeholder="Last Name" required>
+
+                        <input id="username" placeholder="Username" required>
+                        <input id="password" placeholder="Password" required>
+
+                        <input id="email" type="email" placeholder="Email">
+                        <input id="phone_numbers" placeholder="Phone Number">
+
+                        <input id="address" placeholder="Address">
+                        <input id="preferred_centers" placeholder="Preferred Centers">
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h2>Volunteer Details</h2>
+
+                    <div class="form-grid">
+                        <input id="skills_interests" placeholder="Skills / Interests">
+                        <input id="availability_times" placeholder="Availability Times">
+
+                        <input id="educational_background" placeholder="Educational Background">
+                        <input id="current_licenses" placeholder="Current Licenses">
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h2>Emergency Contact</h2>
+
+                    <div class="form-grid">
+                        <input id="emergency_contact_name" placeholder="Emergency Contact Name">
+                        <input id="emergency_contact_phone" placeholder="Emergency Contact Phone">
+
+                        <input id="emergency_contact_email" type="email" placeholder="Emergency Contact Email">
+                        <input id="emergency_contact_address" placeholder="Emergency Contact Address">
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h2>Documents & Status</h2>
+
+                    <select id="approval_status">
+                        <option>Approved</option>
+                        <option>Pending Approval</option>
+                        <option>Disapproved</option>
+                        <option>Inactive</option>
+                    </select>
+
+                    <div class="checkbox-row">
+                        <label>
+                            <input id="drivers_license_on_file" type="checkbox">
+                            Driver's License on File
+                        </label>
+
+                        <label>
+                            <input id="social_security_card_on_file" type="checkbox">
+                            Social Security Card on File
+                        </label>
+                    </div>
+                </div>
+
+                <div class="actions">
+                    <button type="submit" class="save">Save Volunteer</button>
+
+                    <button
+                        type="button"
+                        class="cancel"
+                        onclick="location.href='/volunteers'">
+                        Cancel
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const id = new URLSearchParams(location.search).get("id");
+        const edit = id !== null;
+
+        const form = document.getElementById("form");
+        const message = document.getElementById("message");
+
+        const fields = [
+            "first_name", "last_name", "username", "password",
+            "preferred_centers", "skills_interests", "availability_times",
+            "address", "phone_numbers", "email", "educational_background",
+            "current_licenses", "emergency_contact_name",
+            "emergency_contact_phone", "emergency_contact_email",
+            "emergency_contact_address", "approval_status"
+        ];
+
+        async function loadVolunteer() {
+            if (!edit) {
+                document.getElementById("approval_status").value = "Pending Approval";
+                return;
+            }
+
+            document.getElementById("title").innerHTML =
+                "Edit <span>Volunteer</span>";
+
+            const response = await fetch("/api/volunteers/" + id);
+            const volunteer = await response.json();
+
+            fields.forEach(field => {
+                document.getElementById(field).value = volunteer[field] || "";
+            });
+
+            document.getElementById("drivers_license_on_file").checked =
+                volunteer.drivers_license_on_file === 1;
+
+            document.getElementById("social_security_card_on_file").checked =
+                volunteer.social_security_card_on_file === 1;
+        }
+
+        form.addEventListener("submit", async function(e) {
+    e.preventDefault();
+
+    const data = {};
+
+    fields.forEach(function(field) {
+        data[field] = document.getElementById(field).value;
+    });
+
+    data.drivers_license_on_file =
+        document.getElementById("drivers_license_on_file").checked ? 1 : 0;
+
+    data.social_security_card_on_file =
+        document.getElementById("social_security_card_on_file").checked ? 1 : 0;
+
+    if (!data.first_name || !data.last_name || !data.username || !data.password) {
+        message.textContent = "Please complete required fields.";
+        return;
+    }
+
+    try {
+        const url = edit
+            ? "/api/volunteers/" + id
+            : "/api/volunteers";
+
+        const method = edit ? "PUT" : "POST";
+
+        const response = await fetch(url, {
+            method: method,
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            message.textContent = result.error;
+            return;
+        }
+
+        location.href = "/volunteers";
+
+    } catch (error) {
+        console.error(error);
+        message.textContent = "Something went wrong while saving.";
+    }
+});
+
+        loadVolunteer();
+    </script>
+
+</body>
+</html>

@@ -28,6 +28,11 @@ app.use("/auth", authRoutes);
 const volunteerRoutes = require("./routes/volunteerRoutes");
 app.use("/volunteers", volunteerRoutes);
 
+const volunteerApi = require("./routes/volunteers");
+app.use("/api/volunteers", volunteerApi);
+
+
+
 const opportunityRoutes = require("./routes/opportunityRoutes");
 app.use("/opportunities", opportunityRoutes);
 
@@ -39,6 +44,10 @@ app.get("/", (req, res) => {
 
 app.get("/volunteers", (req, res) => {
     res.sendFile(path.join(__dirname, "views", "volunteers.html"));
+});
+
+app.get("/volunteer-form", (req, res) => {
+    res.sendFile(path.join(__dirname, "views", "volunteer-form.html"));
 });
 
 app.get("/dashboard", requireAuth, (req, res) => {

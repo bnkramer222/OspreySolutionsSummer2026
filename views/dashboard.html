@@ -194,6 +194,15 @@
     </div>
 
     <script>
+
+    fetch('/api/volunteers')
+    .then(response => response.json())
+    .then(volunteers => {
+        document.getElementById('vol-count').textContent = volunteers.length;
+    })
+    .catch(error => {
+        console.error(error);
+    });
         fetch('/opportunities?filter=all')
             .then(r => r.json())
             .then(d => {

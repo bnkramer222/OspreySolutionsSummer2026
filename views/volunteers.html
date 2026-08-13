@@ -240,7 +240,9 @@
                 <option value="Disapproved">Disapproved</option>
                 <option value="Inactive">Inactive</option>
             </select>
-            <button class="btn-add">+ Add New Volunteer</button>
+            <button class="btn-add" onclick="location.href='/volunteer-form'">
+                + Add New Volunteer
+            </button>
         </div>
 
         <div class="no-results" id="no-results">
@@ -251,66 +253,9 @@
         <div class="volunteer-grid" id="volunteer-grid"></div>
     </div>
 
+
     <script src="/public/js/volunteers.js"></script>
-
-    <script>
-        // Render volunteers into the new card layout
-        function renderVolunteers(volunteers) {
-            const grid = document.getElementById("volunteer-grid");
-            const noResults = document.getElementById("no-results");
-            grid.innerHTML = "";
-
-            if (!volunteers || volunteers.length === 0) {
-                noResults.style.display = "block";
-                return;
-            }
-
-            noResults.style.display = "none";
-
-            volunteers.forEach(v => {
-                const status = v.approval_status || "Pending Approval";
-                const badgeClass =
-                    status === "Approved" ? "badge-approved" :
-                    status === "Pending Approval" ? "badge-pending" :
-                    status === "Disapproved" ? "badge-disapproved" :
-                    "badge-inactive";
-
-                const card = document.createElement("div");
-                card.className = "volunteer-card";
-                card.innerHTML = `
-                    <div class="vol-left">
-                        <div class="vol-avatar">👤</div>
-                        <div class="vol-info">
-                            <h3>${v.first_name || ''} ${v.last_name || ''}</h3>
-                            <div class="vol-meta">
-                                ${v.email ? `<span class="vol-tag">✉️ ${v.email}</span>` : ''}
-                                ${v.center ? `<span class="vol-tag">📍 ${v.center}</span>` : ''}
-                                <span class="badge ${badgeClass}">${status}</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="vol-actions">
-                        <button class="btn btn-matches">Matches</button>
-                        <button class="btn btn-edit">Edit</button>
-                    </div>
-                `;
-                grid.appendChild(card);
-            });
-        }
-
-        // Hook into existing volunteers.js if it populates volunteerList
-        const observer = new MutationObserver(() => {
-            const items = document.querySelectorAll("#volunteerList li");
-            if (items.length > 0) {
-                const volunteers = Array.from(items).map(li => ({ first_name: li.textContent }));
-                renderVolunteers(volunteers);
-            }
-        });
-
-        const list = document.getElementById("volunteerList");
-        if (list) observer.observe(list, { childList: true });
-    </script>
-
-    <ul id="volunteerList" style="display:none"></ul>
+    
+   
 </body>
 </html>
