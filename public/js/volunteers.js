@@ -1,91 +1,53 @@
-const volunteers = [
-    {
-        id: 1,
-        firstName: "John",
-        lastName: "Smith",
-        status: "Approved"
-    },
-    {
-        id: 2,
-        firstName: "Sarah",
-        lastName: "Jones",
-        status: "Pending Approval"
-    },
-    {
-        id: 3,
-        firstName: "Mike",
-        lastName: "Brown",
-        status: "Inactive"
-    }
-];
 const filter = document.getElementById("volunteer-filter");
+const volunteerList = document.getElementById("volunteerList");
 
-filter.addEventListener("change", () => {
+let volunteers = [];
 
-    const selectedFilter = filter.value;
-
-    if (selectedFilter === "All") {
-
-        listVolunteers(volunteers);
-
-    } else if (selectedFilter === "Approved/Pending") {
-
-        const filteredVolunteers = volunteers.filter(volunteer => {
-            return volunteer.status === "Approved"
-                || volunteer.status === "Pending Approval";
-        });
-
-        listVolunteers(filteredVolunteers);
-
-    } else {
-
-        const filteredVolunteers = volunteers.filter(
-            volunteer => volunteer.status === selectedFilter
-        );
-
-        listVolunteers(filteredVolunteers);
-    }
-
-});
-
-function getVolunteers() {
-    return volunteers;
+async function loadVolunteers() {
+    const response = await fetch("/api/volunteers/search?q=");
+    volunteers = await response.json();
+    listVolunteers(volunteers);
 }
 
-function getVolunteerById(id) {
-    return volunteers.find(volunteer => volunteer.id === id);
-}
-
-function addVolunteer(volunteer) {
-    volunteers.push(volunteer);
-}
-
-function updateVolunteer(id, updatedVolunteer) {
-    const index = volunteers.findIndex(volunteer => volunteer.id === id);
-    if (index !== -1) {
-        volunteers[index] = { ...volunteers[index], ...updatedVolunteer };
-    }
-}
-
-function deleteVolunteer(id) {
-    const index = volunteers.findIndex(volunteer => volunteer.id === id);
-    if (index !== -1) {
-        volunteers.splice(index, 1);
-    }
-}
-
-function listVolunteers(volunteersToDisplay) {
-    const volunteerList = document.getElementById("volunteerList");
+function listVolunteers(list) {
     volunteerList.innerHTML = "";
 
-    volunteersToDisplay.forEach(volunteer => {
-        const listItem = document.createElement("li");
-        listItem.textContent = `${volunteer.firstName} ${volunteer.lastName} - ${volunteer.status}`;
-        volunteerList.appendChild(listItem);
+    list.forEach(volunteer => {
+        const item = document.createElement("li");
+
+        item.innerHTML =
+            volunteer.first_name + " " +
+            volunteer.last_name + " - " +
+            volunteer.approval_status +
+            ' <button onclick="editVolunteer(' + volunteer.id + ')">Edit</button>';
+
+        volunteerList.appendChild(item);
     });
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-    listVolunteers(volunteers);
-}); 
+filter.addEventListener("change", () => {
+    const selected = filter.value;
 
+    if (selected === "All") {
+        listVolunteers(volunteers);
+    } else if (selected === "Approved/Pending") {
+        listVolunteers(
+            volunteers.filter(v =>
+                v.approval_status === "Approved" ||
+                v.approval_status === "Pending Approval"
+            )
+        );
+    } else {
+        listVolunteers(
+            volunteers.filter(v =>
+                v.approval_status === selected
+            )
+        );
+    }
+});
+
+function editVolunteer(id) {
+    location.href = '/volunteer-form?id=' + id;
+}
+
+loadVolunteers();
