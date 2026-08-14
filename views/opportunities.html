@@ -85,6 +85,9 @@
                 <option value="recent">Most Recent (60 days)</option>
                 <option value="center">By Center</option>
             </select>
+            <select id="center-select" style="display:none;" onchange="applyFilter()">
+                <option value="">Select a center...</option>
+            </select>
             <a href="/opportunities/new" class="btn-add">+ Add New</a>
         </div>
 
@@ -120,10 +123,11 @@
         let latestOpportunityRequest = 0;
         let currentOpportunityId = null;
 
-        async function loadOpportunities(filter = "all", search = "") {
+        async function loadOpportunities(filter = "all", search = "", center = "") {
             const requestId = ++latestOpportunityRequest;
             let url = `/opportunities?filter=${filter}`;
             if (search) url += `&search=${encodeURIComponent(search)}`;
+            if (center) url += `&center=${encodeURIComponent(center)}`;
 
             try {
                 const res = await fetch(url);
@@ -190,16 +194,41 @@
             });
         }
 
-        function applyFilter() {
+        async function applyFilter() {
             const filter = document.getElementById("opportunity-filter").value;
+            const centerSelect = document.getElementById("center-select");
             const search = document.getElementById("search-input").value;
-            loadOpportunities(filter, search);
+
+            if (filter === "center") {
+                centerSelect.style.display = "block";
+
+                if (centerSelect.options.length <= 1) {
+                    const res = await fetch("/opportunities/centers");
+                    const data = await res.json();
+                    data.centers.forEach(c => {
+                        const opt = document.createElement("option");
+                        opt.value = c;
+                        opt.textContent = c;
+                        centerSelect.appendChild(opt);
+                    });
+                }
+
+                const selectedCenter = centerSelect.value;
+                if (selectedCenter) {
+                    loadOpportunities("center", search, selectedCenter);
+                }
+            } else {
+                centerSelect.style.display = "none";
+                centerSelect.value = "";
+                loadOpportunities(filter, search);
+            }
         }
 
         function searchOpportunities() {
             const filter = document.getElementById("opportunity-filter").value;
             const search = document.getElementById("search-input").value;
-            loadOpportunities(filter, search);
+            const center = document.getElementById("center-select").value;
+            loadOpportunities(filter, search, center);
         }
 
         async function viewMatches(id) {

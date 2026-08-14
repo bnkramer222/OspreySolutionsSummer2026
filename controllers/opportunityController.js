@@ -84,6 +84,11 @@ const opportunityController = {
         res.json(opportunity);
     },
 
+    getCenters: (req, res) => {
+        const centers = db.prepare("SELECT DISTINCT center FROM opportunities").all();
+        res.json({ centers: centers.map(c => c.center) });
+    },
+
     getAllVolunteers: (req, res) => {
         const volunteers = db.prepare("SELECT * FROM volunteers").all();
         res.json({ volunteers });
