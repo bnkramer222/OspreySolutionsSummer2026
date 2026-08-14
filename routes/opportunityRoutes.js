@@ -11,5 +11,8 @@ router.post("/:id/edit", requireAuth, opportunityController.edit);
 router.post("/:id/delete", requireAuth, opportunityController.delete);
 router.get("/:id/matches", requireAuth, opportunityController.matches);
 router.get("/:id/data", requireAuth, opportunityController.getData);
+router.post("/:id/matches/add", requireAuth, opportunityController.addMatch);
+router.post("/:id/matches/remove", requireAuth, opportunityController.removeMatch);
+router.get("/volunteers/all", requireAuth, opportunityController.getAllVolunteers);
 
 module.exports = router;

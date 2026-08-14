@@ -1,4 +1,5 @@
 const opportunityModel = require("../models/opportunityModel");
+const db = require("../db/database");
 
 const opportunityController = {
 
@@ -81,6 +82,42 @@ const opportunityController = {
             return res.status(404).json({ error: "Opportunity not found" });
         }
         res.json(opportunity);
+    },
+
+    getAllVolunteers: (req, res) => {
+        const volunteers = db.prepare("SELECT * FROM volunteers").all();
+        res.json({ volunteers });
+    },
+
+    addMatch: (req, res) => {
+        const { volunteer_id } = req.body;
+        const opportunity_id = req.params.id;
+
+        const existing = db.prepare(`
+            SELECT * FROM volunteer_opportunity_matches 
+            WHERE volunteer_id = ? AND opportunity_id = ?
+        `).get(volunteer_id, opportunity_id);
+
+        if (!existing) {
+            db.prepare(`
+                INSERT INTO volunteer_opportunity_matches (volunteer_id, opportunity_id)
+                VALUES (?, ?)
+            `).run(volunteer_id, opportunity_id);
+        }
+
+        res.json({ success: true });
+    },
+
+    removeMatch: (req, res) => {
+        const { volunteer_id } = req.body;
+        const opportunity_id = req.params.id;
+
+        db.prepare(`
+            DELETE FROM volunteer_opportunity_matches 
+            WHERE volunteer_id = ? AND opportunity_id = ?
+        `).run(volunteer_id, opportunity_id);
+
+        res.json({ success: true });
     }
 
 };

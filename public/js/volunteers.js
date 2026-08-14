@@ -28,22 +28,17 @@ function listVolunteers(list) {
         card.innerHTML = `
             <div class="vol-left">
                 <div class="vol-avatar">👤</div>
-
                 <div class="vol-info">
                     <h3>${volunteer.first_name} ${volunteer.last_name}</h3>
-
                     <div class="vol-meta">
                         <span>${volunteer.email || ""}</span>
                         <span>${volunteer.approval_status}</span>
                     </div>
                 </div>
             </div>
-
             <div class="vol-actions">
-                <button class="btn btn-edit"
-                    onclick="editVolunteer(${volunteer.id})">
-                    Edit
-                </button>
+                <button class="btn btn-matches" onclick="viewMatches(${volunteer.id})">Matches</button>
+                <button class="btn btn-edit" onclick="editVolunteer(${volunteer.id})">Edit</button>
             </div>
         `;
 
@@ -80,6 +75,31 @@ function filterVolunteers() {
 
 function editVolunteer(id) {
     location.href = "/volunteer-form?id=" + id;
+}
+
+async function viewMatches(id) {
+    const res = await fetch(`/volunteers/${id}/matches`);
+    const data = await res.json();
+    const list = document.getElementById("matches-list");
+    list.innerHTML = "";
+
+    if (!data.matches || data.matches.length === 0) {
+        list.innerHTML = "<li style='color:#999'>No opportunities matched yet.</li>";
+    } else {
+        data.matches.forEach(op => {
+            const li = document.createElement("li");
+            li.textContent = `${op.name} — ${op.center} — ${op.date}`;
+            list.appendChild(li);
+        });
+    }
+
+    document.getElementById("matches-modal").style.display = "block";
+    document.getElementById("overlay").style.display = "block";
+}
+
+function closeMatches() {
+    document.getElementById("matches-modal").style.display = "none";
+    document.getElementById("overlay").style.display = "none";
 }
 
 filter.addEventListener("change", filterVolunteers);
